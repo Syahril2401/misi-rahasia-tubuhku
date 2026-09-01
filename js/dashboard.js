@@ -88,10 +88,8 @@ const Dashboard = {
 
         return `
         <div class="screen dashboard-screen">
-            <div class="nav-bar">
-                <button class="nav-btn" onclick="App.navigateTo('splash')">🏠 Beranda</button>
+            <div class="nav-bar" style="justify-content:center">
                 <span class="title-md" style="margin:0">📊 Dashboard Guru</span>
-                <div></div>
             </div>
 
             <!-- Statistik Utama -->
