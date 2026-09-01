@@ -678,12 +678,26 @@ body {
     cursor: pointer;
     transition: var(--transition);
     text-align: left;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.option-btn:hover:not(:disabled) {
+/* Hover effect ONLY on devices with mouse (not on touchscreen) */
+@media (hover: hover) and (pointer: fine) {
+    .option-btn:hover:not(:disabled) {
+        border-color: var(--blue);
+        background: var(--blue-bg);
+        transform: translateX(6px);
+    }
+    .option-btn:hover:not(:disabled) .option-label {
+        background: var(--blue-bg);
+        color: var(--blue-dark);
+    }
+}
+
+.option-btn:focus-visible {
     border-color: var(--blue);
-    background: var(--blue-bg);
-    transform: translateX(6px);
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
 }
 
 .option-btn:disabled {
@@ -697,16 +711,12 @@ body {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--blue-bg);
-    color: var(--blue-dark);
+    background: #ECEFF1;
+    color: var(--text-secondary);
     font-size: 1rem;
     font-weight: 800;
     flex-shrink: 0;
-}
-
-.option-btn.selected {
-    border-color: var(--blue);
-    background: var(--blue-bg);
+    transition: var(--transition);
 }
 
 .option-btn.correct {
@@ -745,8 +755,10 @@ body {
     border-radius: var(--radius-lg);
 }
 
-.option-tf:hover:not(:disabled) {
-    transform: translateY(-4px);
+@media (hover: hover) and (pointer: fine) {
+    .option-tf:hover:not(:disabled) {
+        transform: translateY(-4px);
+    }
 }
 
 /* ========== FEEDBACK OVERLAY ========== */

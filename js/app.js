@@ -28,7 +28,13 @@ const App = {
     },
 
     init() {
-        this.navigateTo('splash');
+        // Dashboard guru hanya bisa diakses lewat URL: ?guru
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('guru')) {
+            this.navigateTo('dashboard');
+        } else {
+            this.navigateTo('splash');
+        }
     },
 
     // ======== SPLASH SCREEN ========
@@ -58,12 +64,6 @@ const App = {
                     <p>Kelas 3-D • IPAS • Tahun Pelajaran 2026–2027</p>
                     <p>Bab 1 — Keajaiban Tubuhku</p>
                 </div>
-            </div>
-
-            <div class="splash-footer">
-                <button class="nav-btn" onclick="App.navigateTo('dashboard')" style="opacity:0.6;font-size:0.8rem">
-                    🔐 Dashboard Guru
-                </button>
             </div>
         </div>`;
     },
@@ -522,43 +522,29 @@ const App = {
     },
 
     handleSendResult() {
+        // Simpan hasil ke localStorage
+        Game.saveResult();
+
         const formData = Game.getFormData();
-        const gformUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfdmRo707mNc27jF3sNfNues3wFyYdgHnmGVQana_cgA2tVGg/viewform';
 
-        // Format rangkuman hasil untuk disalin ke clipboard
-        const summaryText = `🫀 HASIL MISI RAHASIA TUBUHKU
-Nama: ${formData.nama}
-Absen: ${formData.absen}
-Kelas: ${formData.kelas}
-Skor Total: ${formData.skorTotal}/100
-Status: ${formData.status}
-Skor Misi: M1=${formData.skorMisi1}, M2=${formData.skorMisi2}, M3=${formData.skorMisi3}, M4=${formData.skorMisi4}, M5=${formData.skorMisi5}`;
-
-        // Salin ke clipboard jika memungkinkan
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(summaryText).catch(() => {});
-        }
-
-        // Tampilkan modal konfirmasi dengan tombol menuju Google Form
+        // Tampilkan konfirmasi berhasil
         const overlay = document.createElement('div');
         overlay.className = 'feedback-overlay';
         overlay.innerHTML = `
         <div class="feedback-card" style="max-width:460px">
-            <span class="feedback-icon">📊</span>
-            <h3 class="feedback-title correct">Kirim Hasil ke Guru</h3>
+            <span class="feedback-icon">✅</span>
+            <h3 class="feedback-title correct">Hasil Berhasil Dikirim!</h3>
             <p class="feedback-message">
-                Hasil asesmen <strong>${App.escapeHtml(formData.nama)}</strong>:<br>
-                Skor Total: <strong>${formData.skorTotal}/100</strong> (${formData.status})<br><br>
-                <small class="text-muted">Data rangkuman telah disalin otomatis. Klik tombol di bawah untuk membuka Google Form.</small>
+                Hasil asesmen <strong>${App.escapeHtml(formData.nama)}</strong> telah tersimpan.<br><br>
+                Skor Total: <strong>${formData.skorTotal}/100</strong><br>
+                Status: <strong>${formData.status}</strong>
             </p>
-            <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
-                <a href="${gformUrl}" target="_blank" class="btn btn-primary" onclick="this.closest('.feedback-overlay').remove()">
-                    📝 Buka Google Form
-                </a>
-                <button class="btn btn-outline btn-sm" onclick="this.closest('.feedback-overlay').remove()">
-                    Batal
-                </button>
-            </div>
+            <p class="text-muted" style="font-size:0.85rem;margin-bottom:16px">
+                💡 Guru sudah bisa melihat hasilmu.
+            </p>
+            <button class="btn btn-primary" onclick="this.closest('.feedback-overlay').remove()">
+                👍 Mengerti
+            </button>
         </div>`;
 
         document.body.appendChild(overlay);
